@@ -1,21 +1,58 @@
 const express = require("express");
+const path = require("path");
 const app = express();
-
 app.use(express.json());
 
 //criar um array chamado "pessoas"
 //banco de dados local
+const publicDir = path.join(__dirname, "./");
+
 let pessoas = [
-  { nome: "maria", idade: 14, animalfavorito: "coelho", id: 1 },
-  { nome: "eduarda", idade: 13, animalfavorito: "girafa", id: 2 },
-  { nome: "laura", idade: 14, animalfavorito: "gato", id: 3 },
-  { nome: "gabi", idade: 21, animalfavorito: "cachorro", id: 4 },
-  { nome: "ana laura", idade: 14, animalfavorito: "pantera", id: 5 },
+  {
+    nome: "maria",
+    login: "admn1",
+    senha: "1234",
+    idade: 14,
+    animalfavorito: "coelho",
+    id: 1,
+  },
+  {
+    nome: "eduarda",
+    login: "admn2",
+    senha: "1234",
+    idade: 13,
+    animalfavorito: "girafa",
+    id: 2,
+  },
+  {
+    nome: "laura",
+    login: "admn3",
+    senha: "1234",
+    idade: 14,
+    animalfavorito: "gato",
+    id: 3,
+  },
+  {
+    nome: "gabi",
+    login: "admn4",
+    senha: "1234",
+    idade: 21,
+    animalfavorito: "cachorro",
+    id: 4,
+  },
+  {
+    nome: "ana laura",
+    login: "admn5",
+    senha: "1234",
+    idade: 14,
+    animalfavorito: "pantera",
+    id: 5,
+  },
 ];
 
 //API do tipo GET rota = 'http://localhost:3000/'
 app.get("/", (req, res) => {
-  res.json({ mensagem: "API de pessoas funcionando" });
+  res.sendFile(path.join(publicDir, "itens.html"));
 });
 
 //API do tipo POST rota = 'http://localhost:3000/pessoas'
@@ -85,10 +122,33 @@ app.delete("/pessoas/:id", (req, res) => {
     return res.status(404).json({ mensagem: "Pessoa não encontrada" });
   }
 
-  pessoas.splice(id , 1);
+  pessoas.splice(id, 1);
   console.log("PESSOAS :", pessoas);
   res.json(pessoas);
 });
+
+//aula 19/09 - NOVOS ENDPOINTS
+
+app.post("/login", (req, res) => {
+  const { login, senha } = req.body;
+
+  //verificar se um dos campos esta vazio
+  if (!login || !senha) {
+    return res.status(400).json({ menssage: "Requisição invalida" });
+  }
+
+const usuario = pessoas.find((p) => p.login === login);
+if (usario) {
+  res.status(404).json({
+    menssage: "Usuario nao encontrado",
+  });
+}
+
+if (usuario.senha !== senha) {
+  return res.status(404).json({
+    menssage: "Senha incorreta",
+  });
+}});
 
 const PORT = 3000;
 app.listen(PORT, () => {
